@@ -1,5 +1,6 @@
 package org.blacksmithing;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.event.EventHandler;
@@ -16,7 +17,7 @@ import java.util.*;
 
 public class BSListener implements Listener {
 
-    Map<List<ItemStack>, String> recipes = new HashMap<>();
+    List<BSRecipe> recipes = new ArrayList<>();
     Map<Coord, List<ItemStack>> tablesMaterials = new HashMap<>();
     Map<Coord, Long> tablesStartTimestamp = new HashMap<>();
 
@@ -24,26 +25,15 @@ public class BSListener implements Listener {
         try {
             BufferedReader in = new BufferedReader(new FileReader("blacksmithing_recipes.txt"));
             String line;
+            int i = 0;
             while (((line = in.readLine()) != null)) {
-                String[] splits = line.split(":",2);
-                String name = splits[1];
-                List<ItemStack> it = new LinkedList<>();
-                for (String split : splits[0].split(",")) {
-                    String[] items = split.split(" ");
-                    Material mat = switch (items[1]) {
-                        case "coal" -> Material.COAL;
-                        case "copper" -> Material.COPPER_INGOT;
-                        case "redstone" -> Material.REDSTONE;
-                        case "lapis" -> Material.LAPIS_LAZULI;
-                        case "iron" -> Material.IRON_INGOT;
-                        case "gold" -> Material.GOLD_INGOT;
-                        case "diamond" -> Material.DIAMOND;
-                        case "netherite" -> Material.NETHERITE_INGOT;
-                        default -> Material.ROTTEN_FLESH;
-                    };
-                    it.add(new ItemStack(mat, Integer.parseInt(items[0])));
+                try {
+                    recipes.add(new BSRecipe(line));
+                } catch (Exception e) {
+                    Bukkit.getConsoleSender().sendMessage("§2[Blacksmithing] §4§lWarning:§r Recipe at line " +
+                            (i + 1) + " of file 'blacksmithing_recipes.txt' is incorrect");
                 }
-                recipes.put(it,name);
+                i++;
             }
         } catch (IOException ex) {
             ex.printStackTrace();
@@ -68,7 +58,7 @@ public class BSListener implements Listener {
                 BufferedWriter out = new BufferedWriter(new FileWriter("blacksmithing_tables.txt", true));
                 out.write(center.getX() + ";" + center.getY() + ";" + center.getZ() + "\n");
                 out.close();
-                e.getPlayer().sendMessage("Blacksmith table created!");
+                e.getPlayer().sendMessage("§aBlacksmith table created!");
             } catch (IOException ex) {
                 ex.printStackTrace();
             }
@@ -96,7 +86,7 @@ public class BSListener implements Listener {
                             e.setCancelled(true);
                             Coord coords = new Coord(x,y,z);
                             Material mat = e.getItem().getType();
-                            if (mat == Material.DIAMOND || mat == Material.IRON_INGOT || mat == Material.GOLD_NUGGET) {
+                            if (mat == Material.DIAMOND || mat == Material.IRON_INGOT || mat == Material.GOLD_INGOT) {
                                 PlayerInventory inv = e.getPlayer().getInventory();
                                 ItemStack itInHand = inv.getItemInMainHand();
                                 itInHand.setAmount(itInHand.getAmount()-1);
@@ -127,8 +117,8 @@ public class BSListener implements Listener {
                                 itInHand.setAmount(itInHand.getAmount()-1);
                                 inv.setItemInMainHand(itInHand);
 
-                                BMaterial it = new BMaterial(tablesMaterials.get(coords),
-                                        tablesStartTimestamp.get(coords)-System.currentTimeMillis());
+                                BSMaterial it = new BSMaterial(tablesMaterials.get(coords),
+                                    System.currentTimeMillis()-tablesStartTimestamp.get(coords));
                                 tablesMaterials.remove(coords);
                                 tablesStartTimestamp.remove(coords);
                                 e.getPlayer().getInventory().addItem(it);
@@ -150,22 +140,7 @@ public class BSListener implements Listener {
                     itInHand.setAmount(itInHand.getAmount()-1);
                     inv.setItemInMainHand(itInHand);
 
-                    String name = BMaterial.checkRecipes(recipes, e.getItem());
-                    ItemStack resultItem;
-                    if (name != null) {
-                        resultItem = new ItemStack(Material.IRON_INGOT);
-                        ItemMeta ingotMeta = resultItem.getItemMeta();
-                        if (ingotMeta == null) return;
-                        ingotMeta.setDisplayName(name);
-                        resultItem.setItemMeta(ingotMeta);
-                    } else {
-                        resultItem = new ItemStack(Material.IRON_NUGGET);
-                        ItemMeta wasteMeta = resultItem.getItemMeta();
-                        if (wasteMeta == null) return;
-                        wasteMeta.setDisplayName("Metal waste");
-                        resultItem.setItemMeta(wasteMeta);
-                    }
-                    e.getPlayer().getInventory().addItem(resultItem);
+                    e.getPlayer().getInventory().addItem(BSMaterial.checkRecipes(recipes, e.getItem()));
                     e.setCancelled(true);
                 }
             }
