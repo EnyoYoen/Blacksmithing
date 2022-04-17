@@ -1,0 +1,8 @@
+main: org.blacksmithing.BlacksmithingPlugin
+name: Blacksmithing
+version: 1.0.0
+description: A plugin to create new materials!
+api-version: 1.18
+load: POSTWORLD
+author: EnyoYoen
+prefix: Blacksmithing
