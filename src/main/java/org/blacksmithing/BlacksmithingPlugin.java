@@ -9,9 +9,10 @@ public class BlacksmithingPlugin extends JavaPlugin {
     @Override
     public void onEnable() {
         instance = this;
-        Bukkit.getConsoleSender().sendMessage("Blacksmithing loading");
+        Bukkit.getConsoleSender().sendMessage("§2[Blacksmithing] §rLoading...");
         BSListener listener = new BSListener();
         listener.loadRecipes();
         getServer().getPluginManager().registerEvents(listener, this);
+        Bukkit.getConsoleSender().sendMessage("§2[Blacksmithing] §rLoading finished!");
     }
 }
