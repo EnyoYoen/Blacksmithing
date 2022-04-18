@@ -25,17 +25,8 @@ public class BSRecipe {
         materials = new HashSet<>();
         for (String split : splits[0].split(",")) {
             String[] items = split.split(" ");
-            Material mat = switch (items[1]) {
-                case "coal" -> Material.COAL;
-                case "copper" -> Material.COPPER_INGOT;
-                case "redstone" -> Material.REDSTONE;
-                case "lapis" -> Material.LAPIS_LAZULI;
-                case "iron" -> Material.IRON_INGOT;
-                case "gold" -> Material.GOLD_INGOT;
-                case "diamond" -> Material.DIAMOND;
-                case "netherite" -> Material.NETHERITE_INGOT;
-                default -> Material.ROTTEN_FLESH;
-            };
+            Material mat = Material.getMaterial(items[1]);
+            if (mat == null) throw new Exception();
             materials.add(new ItemStack(mat, Integer.parseInt(items[0])));
         }
     }
