@@ -37,5 +37,5 @@ There is 5 parts in the recipe, separated by ':' :
 2 iron,1 gold,1 diamond:30000:5000:§r§7Corrupted iron:IRON_INGOT
 ```
 ### Results of the examples
-![Screenshot 1](doc/images/Screen1.png)
-![Screenshot 2](doc/images/Screen2.png)
+![Result 1](doc/images/Recipe1.png)
+![Result 2](doc/images/Recipe2.png)
