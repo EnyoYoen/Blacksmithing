@@ -21,7 +21,7 @@ public class BSMaterial extends ItemStack {
                     PersistentDataType.INTEGER, it.getAmount());
         }
         cont.set(new NamespacedKey(BlacksmithingPlugin.instance, "duration"), PersistentDataType.LONG, duration);
-        meta.setDisplayName("Molten alloy");
+        meta.setDisplayName("§rMolten alloy");
         this.setItemMeta(meta);
     }
 
@@ -58,7 +58,7 @@ public class BSMaterial extends ItemStack {
         }
         ItemStack waste = new ItemStack(Material.IRON_NUGGET);
         ItemMeta wasteMeta = waste.getItemMeta();
-        wasteMeta.setDisplayName("§8Metal waste");
+        wasteMeta.setDisplayName("§r§8Waste");
         waste.setItemMeta(wasteMeta);
         return waste;
     }

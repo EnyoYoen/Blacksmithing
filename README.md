@@ -1,11 +1,16 @@
 
 # Blacksmithing
 A Minecraft 1.18 plugin to create new materials with multi-block structures
-## Screenshots
-![Screenshot 1](doc/images/Screen1.png)
-![Screenshot 2](doc/images/Screen2.png)
+## Create new alloys
+![Structures](doc/images/Structures.png)
+These structures consist of an iron trap door or a chain on a cauldron. Underneath the cauldron there must be a block of magma.
+They are used to melt materials to form molten alloys. 
+After putting the ingredients of a recipe into the cauldron by right-clicking and waiting, you can right-click on the cauldron with an empty bucket in your hand to collect the molten alloy  
+You can right click with a clock on the cauldron to see how long ago you started putting the ingredients in
+![Molten alloy](doc/images/Alloy.png)
 ## Recipes
-The allowed materials for the recipes are stored in a file named 'blacksmithing_materials.txt'. In this file, each material is on a line, and the name of the material must be the precise name they are given in the [Material](https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/Material.html#getMaterial(java.lang.String)) enum.
+The allowed materials for the recipes are stored in a file named 'blacksmithing_materials.txt'. In this file, each material is on a line, and the name of the material must be the precise name they are given in the [Material](https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/Material.html) enum.
+You can't use an empty bucket or a clock as an ingredient.
 **Example file :**
 ```
 COAL
