@@ -3,17 +3,16 @@ package org.blacksmithing;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
-import org.bukkit.block.BlockFace;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.inventory.PrepareItemCraftEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.material.Directional;
 
 import java.io.*;
 import java.util.*;
@@ -22,6 +21,7 @@ public class BSListener implements Listener {
 
     List<Material> allowedMaterials = new ArrayList<>();
     List<BSRecipe> recipes = new ArrayList<>();
+    List<BSCraft> crafts = new ArrayList<>();
     Map<Coord, List<ItemStack>> tablesMaterials = new HashMap<>();
     Map<Coord, Long> tablesStartTimestamp = new HashMap<>();
 
@@ -60,6 +60,36 @@ public class BSListener implements Listener {
         } catch (IOException ex) {
             Bukkit.getConsoleSender().sendMessage("§2[Blacksmithing] §4§lError:§r Could not open file " +
                     "'blacksmithing_recipes.txt'");
+        }
+
+        try {
+            BufferedReader in = new BufferedReader(new FileReader("blacksmithing_crafts.txt"));
+            String line;
+            int i = 0;
+            while (((line = in.readLine()) != null)) {
+                try {
+                    crafts.add(new BSCraft(line, recipes));
+                } catch (Exception e) {
+                    Bukkit.getConsoleSender().sendMessage("§2[Blacksmithing] §4§lWarning:§r Craft at line " +
+                            (i + 1) + " of file 'blacksmithing_crafts.txt' is incorrect");
+                }
+                i++;
+            }
+        } catch (IOException ex) {
+            Bukkit.getConsoleSender().sendMessage("§2[Blacksmithing] §4§lError:§r Could not open file " +
+                    "'blacksmithing_crafts.txt'");
+        }
+    }
+
+    @EventHandler
+    public void onPrepareItemCraft(PrepareItemCraftEvent e) {
+        ItemStack[] items = e.getInventory().getMatrix();
+        ItemStack result;
+        for (BSCraft craft : crafts) {
+            if ((result = craft.equals(items)) != null) {
+                e.getInventory().setResult(result);
+                return;
+            }
         }
     }
 
@@ -248,7 +278,8 @@ public class BSListener implements Listener {
                     itInHand.setAmount(itInHand.getAmount()-1);
                     inv.setItemInMainHand(itInHand);
 
-                    e.getPlayer().getInventory().addItem(BSMaterial.checkRecipes(recipes, e.getItem()));
+                    e.getPlayer().getInventory().addItem(BSMaterial.checkRecipes(recipes, allowedMaterials,
+                            e.getItem()));
                     e.setCancelled(true);
                 }
             }

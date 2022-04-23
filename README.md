@@ -1,3 +1,4 @@
+
 # Blacksmithing
 A Minecraft 1.18 plugin to create new materials with multi-block structures
 ## Create new alloys
@@ -38,3 +39,15 @@ There is 5 parts in the recipe, separated by ':' :
 ### Results of the examples
 ![Screenshot 1](doc/images/Screen1.png)
 ![Screenshot 2](doc/images/Screen2.png)
+## Custom crafts
+The custom crafts are stored in a file named 'blacksmithing_crafts.txt' that you have to create.  
+Each craft is on a line, there is 4 parts in each craft, separated by ':' :
+ - The name of the result item (supports spaces and bukkit color codes)
+ - The material of the result item
+ - A comma-separated list of 9 materials, the material can be a normal material or the name of a custom material created with a blacksmithing recipe
+ - A comma-separated list of parameters for the craft result item (durability, efficiency,...) NOT IMPLEMENTED
+### Examples 
+```
+§r§1Super-Super-Diamond:DIAMOND:,,,§r§bSuper-Diamond,§r§bSuper-Diamond,§r§bSuper-Diamond,,,:
+§r§bSuper-Chestplate:DIAMOND_CHESTPLATE:DIAMOND,,DIAMOND,DIAMOND,§r§bSuper-Diamond,DIAMOND,DIAMOND,DIAMOND,DIAMOND:
+```
