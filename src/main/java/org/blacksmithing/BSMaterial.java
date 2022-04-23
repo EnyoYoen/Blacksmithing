@@ -25,15 +25,13 @@ public class BSMaterial extends ItemStack {
         this.setItemMeta(meta);
     }
 
-    public static ItemStack checkRecipes(List<BSRecipe> recipes, ItemStack it) {
+    public static ItemStack checkRecipes(List<BSRecipe> recipes, List<Material> allowedMaterials, ItemStack it) {
         ItemMeta meta = it.getItemMeta();
         if (meta != null) {
             Set<ItemStack> its = new HashSet<>();
-            Material[] mats = {Material.COAL, Material.COPPER_INGOT, Material.REDSTONE, Material.LAPIS_LAZULI,
-                    Material.IRON_INGOT, Material.GOLD_INGOT, Material.DIAMOND, Material.NETHERITE_INGOT};
 
             PersistentDataContainer container = meta.getPersistentDataContainer();
-            for (Material mat : mats) {
+            for (Material mat : allowedMaterials) {
                 NamespacedKey key = new NamespacedKey(BlacksmithingPlugin.instance, mat.toString());
                 if (container.has(key, PersistentDataType.INTEGER)) {
                     int amount = container.get(key, PersistentDataType.INTEGER);
