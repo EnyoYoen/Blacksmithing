@@ -2,10 +2,15 @@ package org.blacksmithing;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.attribute.Attribute;
+import org.bukkit.attribute.AttributeModifier;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.ItemMeta;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
@@ -22,9 +27,19 @@ public class BSCraft {
         Material resultMaterial = Material.getMaterial(splits[1]);
         if (resultMaterial == null) throw new Exception();
         result = new ItemStack(resultMaterial);
+
         ItemMeta resultm = result.getItemMeta();
         if (resultm == null) throw new Exception();
         resultm.setDisplayName(name);
+        if (!splits[3].trim().equals("")) {
+            for (String split : splits[3].split(",")) {
+                String[] attributeSplit = split.split("=", 2);
+                String attributeName = attributeSplit[0];
+                Attribute attribute = Attribute.valueOf(attributeName);
+                resultm.addAttributeModifier(attribute, new AttributeModifier(attributeName,
+                        Double.parseDouble(attributeSplit[1]), AttributeModifier.Operation.ADD_NUMBER));
+            }
+        }
         result.setItemMeta(resultm);
 
         HashMap<Material, Character> materials = new HashMap<>();
