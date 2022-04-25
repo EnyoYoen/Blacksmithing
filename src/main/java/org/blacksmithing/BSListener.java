@@ -2,17 +2,25 @@ package org.blacksmithing;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
 import org.bukkit.block.Block;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.entity.EntityDamageByBlockEvent;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.inventory.PrepareItemCraftEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerItemDamageEvent;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.persistence.PersistentDataType;
 
 import java.io.*;
 import java.util.*;
@@ -81,6 +89,15 @@ public class BSListener implements Listener {
         }
     }
 
+    public boolean checkAndDamageItem(ItemStack item) {
+        if (BSDamageable.checkDamageable(item)) {
+            BSDamageable.takeDamage(item);
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     @EventHandler
     public void onPrepareItemCraft(PrepareItemCraftEvent e) {
         ItemStack[] items = e.getInventory().getMatrix();
@@ -91,6 +108,27 @@ public class BSListener implements Listener {
                 return;
             }
         }
+    }
+
+    @EventHandler
+    public void onEntityDamage(EntityDamageEvent event) {
+        if (event.getEntity() instanceof Player p) {
+            PlayerInventory i = p.getInventory();
+            if (i.getHelmet() != null)
+                checkAndDamageItem(i.getHelmet());
+            if (i.getChestplate() != null)
+                checkAndDamageItem(i.getChestplate());
+            if (i.getLeggings() != null)
+                checkAndDamageItem(i.getLeggings());
+            if (p.getInventory().getBoots() != null)
+                checkAndDamageItem(i.getBoots());
+        }
+    }
+
+    @EventHandler
+    public void onPlayerItemDamage(PlayerItemDamageEvent event) {
+        if (checkAndDamageItem(event.getItem()))
+            event.setCancelled(true);
     }
 
     @EventHandler

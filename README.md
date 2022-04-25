@@ -45,10 +45,10 @@ Each craft is on a line, there is 4 parts in each craft, separated by ':' :
  - The name of the result item (supports spaces and bukkit color codes)
  - The material of the result item
  - A comma-separated list of 9 materials, the material can be a normal material or the name of a custom material created with a blacksmithing recipe
- - A comma-separated list of attributes for the craft result item : [Attribute](https://hub.spigotmc.org/javadocs/spigot/org/bukkit/attribute/Attribute.html) name and the value, separated by a '='  
+ - A comma-separated list of attributes for the craft result item : [Attribute](https://hub.spigotmc.org/javadocs/spigot/org/bukkit/attribute/Attribute.html) name and the value, separated by a '='. You can also change the durability of the item with 'DURABILITY' attribute (has to be the first attribute)   
 ### Examples 
 ```
 §r§1Super-Super-Diamond:DIAMOND:,,,§r§bSuper-Diamond,§r§bSuper-Diamond,§r§bSuper-Diamond,,,:
-§r§bSuper-Chestplate:DIAMOND_CHESTPLATE:DIAMOND,,DIAMOND,DIAMOND,§r§bSuper-Diamond,DIAMOND,DIAMOND,DIAMOND,DIAMOND:GENERIC_KNOCKBACK_RESISTANCE=2,GENERIC_MAX_HEALTH=20
+§r§bSuper-Chestplate:DIAMOND_CHESTPLATE:DIAMOND,,DIAMOND,DIAMOND,§r§bSuper-Diamond,DIAMOND,DIAMOND,DIAMOND,DIAMOND:DURABILITY=1000,GENERIC_KNOCKBACK_RESISTANCE=2,GENERIC_MAX_HEALTH=20
 §r§bSuper-Sword:DIAMOND_SWORD:,§r§bSuper-Diamond,,,§r§bSuper-Diamond,,,STICK,:GENERIC_ATTACK_DAMAGE=30
 ```
